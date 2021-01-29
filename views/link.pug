@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Redirecting to...
+  a(href=link)= link
+  script.
+    setTimeout(function () {
+    window.location.href = "#{link}";
+    }, 5000)
+
