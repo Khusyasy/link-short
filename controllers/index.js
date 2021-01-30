@@ -30,7 +30,7 @@ exports.get_link = function (req, res, next) {
 exports.created = function (req, res, next) {
     connection.query(`SELECT * FROM links WHERE link_short = '${req.params.hash}'`, function (err, results, fields) {
         if (err) throw err;
-        console.log(1);
+        // console.log(1);
         if (results[0]) {
             res.render('created', { title: "Created", long: results[0].link_long, short: 'http://localhost:3000/' + req.params.hash });
         } else {
