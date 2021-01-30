@@ -11,8 +11,12 @@ exports.create_link = function (req, res, next) {
     if (URLisValid(url)) {
         var hash = crypto.createHash('sha1').update(url).digest("hex");
         connection.query(`INSERT INTO links (ID, link_long, link_short, created, click) VALUES (null, '${escape(url)}', '${hash}', NOW(), 0)`, function (err, results) {
-            if (err) throw err
-            res.redirect("/created/" + hash);
+            if (err) {
+                req.session.msg = { status: "error", text: "Connection Error" };
+                res.redirect("/");
+            } else {
+                res.redirect("/created/" + hash);
+            }
         });
     } else {
         req.session.msg = { status: "error", text: "URL is invalid" };
@@ -40,7 +44,7 @@ exports.created = function (req, res, next) {
         if (err) throw err;
         // console.log(1);
         if (results[0]) {
-            res.render('created', { title: "Created", long: unescape(results[0].link_long), short: 'http://localhost:3000/' + hash });
+            res.render('created', { title: "Created", long: unescape(results[0].link_long), short: process.env.BASE_URL + hash });
         } else {
             res.sendStatus(404);
         }
