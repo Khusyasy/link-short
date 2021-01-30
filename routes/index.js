@@ -6,6 +6,7 @@ var index = require('../controllers/index');
 /* GET home page. */
 router.get('/', index.index);
 router.post('/', index.create_link);
+router.get('/created/:hash', index.created);
 router.get('/:hash', index.get_link);
 
 module.exports = router;

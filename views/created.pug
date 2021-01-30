@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Link Created
+  div
+    p Long Link
+    a(href=long, id='long')= long
+  div
+    p Shorter Link
+    a(href=short, id='short')= short
+    input(type="text", id="copy", value=short)
+    button(onclick="$('#copy').select(); document.execCommand('copy');") Copy
