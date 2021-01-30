@@ -1,16 +1,23 @@
 var crypto = require('crypto');
 var connection = require('../helpers/database');
+var URLisValid = require('../helpers/url_validation');
 
 exports.index = function (req, res, next) {
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Express', msg: req.session.msg });
 }
 
 exports.create_link = function (req, res, next) {
-    var hash = crypto.createHash('sha1').update(req.body.link).digest("hex");
-    connection.query(`INSERT INTO links (ID, link_long, link_short, created, click) VALUES (null, '${req.body.link}', '${hash}', NOW(), 0)`, function (err, results) {
-        if (err) throw err
-        res.redirect("/created/" + hash);
-    });
+    var url = req.body.link;
+    if (URLisValid(url)) {
+        var hash = crypto.createHash('sha1').update(url).digest("hex");
+        connection.query(`INSERT INTO links (ID, link_long, link_short, created, click) VALUES (null, '${req.body.link}', '${hash}', NOW(), 0)`, function (err, results) {
+            if (err) throw err
+            res.redirect("/created/" + hash);
+        });
+    } else {
+        req.session.msg = { status: "error", text: "URL is invalid" };
+        res.redirect("/");
+    }
 }
 
 exports.get_link = function (req, res, next) {

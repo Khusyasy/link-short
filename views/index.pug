@@ -5,6 +5,10 @@ block content
     form(action=".", method="post")
         .form-group
             label(for="link") Link to Shorten
-            input.form-control(type="text", name="link", id="link", required="required")
+            input.form-control(type="text", name="link", id="link", required)
         .form-group
             input.btn.btn-primary(type="submit", name="submit", value="shorten")
+    if msg
+        if msg.status == "error"
+            .alert.alert-danger(role="alert")= msg.text
+        
