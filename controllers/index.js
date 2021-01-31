@@ -1,6 +1,6 @@
-var crypto = require('crypto');
 var connection = require('../helpers/database');
 var URLisValid = require('../helpers/url_validation');
+var createShortID = require('../helpers/short_hash');
 
 exports.index = function (req, res, next) {
     res.render('index', { title: 'Express', msg: req.session.msg });
@@ -9,7 +9,7 @@ exports.index = function (req, res, next) {
 exports.create_link = function (req, res, next) {
     var url = req.body.link;
     if (URLisValid(url)) {
-        var hash = crypto.createHash('sha1').update(url).digest("hex");
+        var hash = createShortID(url);
         connection.query(`INSERT INTO links (ID, link_long, link_short, created, click) VALUES (null, '${escape(url)}', '${hash}', NOW(), 0)`, function (err, results) {
             if (err) {
                 req.session.msg = { status: "error", text: "Connection Error" };
