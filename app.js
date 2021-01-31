@@ -24,9 +24,9 @@ app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstra
 app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 86400000 },
+    cookie: { maxAge: 60000 },
     store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
+        checkPeriod: 60000
     }),
     resave: false,
     saveUninitialized: false
