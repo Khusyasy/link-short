@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var MemoryStore = require('memorystore')(session);
 require('dotenv').config();
 
 var indexRouter = require('./routes/index');
@@ -21,7 +22,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    saveUninitialized: false
+}));
 
 app.use('/', indexRouter);
 
