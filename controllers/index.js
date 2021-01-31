@@ -26,12 +26,12 @@ exports.create_link = function (req, res, next) {
 
 exports.get_link = function (req, res, next) {
     connection.query(`SELECT * FROM links WHERE link_short = '${escape(req.params.hash)}'`, function (err, results, fields) {
-        if (err) throw err;
-        if (results[0]) {
+        if (err) {
+            req.session.msg = { status: "error", text: "Connection Error" };
+            res.redirect("/");
+        } else if (results[0]) {
             res.render('link', { title: "Redirecting", link: unescape(results[0].link_long) });
-            connection.query(`UPDATE links SET click = ${results[0].click + 1} WHERE ID = ${results[0].ID}`, function (e, r) {
-                if (e) throw e
-            });
+            connection.query(`UPDATE links SET click = ${results[0].click + 1} WHERE ID = ${results[0].ID}`, function (e, r) { if (e) console.log(e); });
         } else {
             res.sendStatus(404);
         }
@@ -41,9 +41,10 @@ exports.get_link = function (req, res, next) {
 exports.created = function (req, res, next) {
     var hash = req.params.hash;
     connection.query(`SELECT * FROM links WHERE link_short = '${escape(hash)}'`, function (err, results, fields) {
-        if (err) throw err;
-        // console.log(1);
-        if (results[0]) {
+        if (err) {
+            req.session.msg = { status: "error", text: "Connection Error" };
+            res.redirect("/");
+        } else if (results[0]) {
             res.render('created', { title: "Created", long: unescape(results[0].link_long), short: process.env.BASE_URL + hash });
         } else {
             res.sendStatus(404);
