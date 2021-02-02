@@ -45,7 +45,7 @@ exports.created = function (req, res, next) {
             req.session.msg = { status: "error", text: "Connection Error" };
             res.redirect("/");
         } else if (results[0]) {
-            res.render('created', { title: "Created", long: unescape(results[0].link_long), short: process.env.BASE_URL + hash });
+            res.render('created', { title: "Created - " + unescape(results[0].link_long), long: unescape(results[0].link_long), short: process.env.BASE_URL + hash });
         } else {
             res.sendStatus(404);
         }

@@ -1,12 +1,14 @@
 extends layout
 
 block content
-    h1 Link Created
+    h1.text-center Link Created
     .form-group
         label(for="long") Long Link
-        input.form-control(value=long, id='long', readonly)
+        input.form-control(type="text", value=long, id='long', readonly)
     .form-group
         label(for="short") Shorter Link
-        input.form-control(value=short, id='short', readonly)
+        input.form-control(type="text", value=short, id='short', readonly)
     .form-group
-        button.btn.btn-primary(onclick="$('#short').select(); document.execCommand('copy');") Copy Link
+        button.btn.btn-primary.form-control(onclick="$('#short').select(); document.execCommand('copy');") Copy Link
+    .form-group
+            button.btn.btn-primary.form-control View Stats
