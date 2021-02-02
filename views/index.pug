@@ -1,13 +1,13 @@
 extends layout
 
 block content
-    h1 Shortener
+    h1.text-center Link Shortener
     form(action=".", method="post")
         .form-group
             label(for="link") Link to Shorten
             input.form-control(type="text", name="link", id="link", required)
         .form-group
-            input.btn.btn-primary(type="submit", name="submit", value="shorten")
+            input.btn.btn-primary.form-control(type="submit", name="submit", value="Shorten")
     if msg
         if msg.status == "error"
             .alert.alert-danger(role="alert")= msg.text

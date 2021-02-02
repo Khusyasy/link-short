@@ -3,7 +3,7 @@ var URLisValid = require('../helpers/url_validation');
 var createShortID = require('../helpers/short_hash');
 
 exports.index = function (req, res, next) {
-    res.render('index', { title: 'Express', msg: req.session.msg });
+    res.render('index', { title: 'Link Shortener', msg: req.session.msg });
 }
 
 exports.create_link = function (req, res, next) {
