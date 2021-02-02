@@ -6,6 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var MemoryStore = require('memorystore')(session);
 require('dotenv').config();
+var favicon = require('serve-favicon');
 
 var indexRouter = require('./routes/index');
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public/images/favicon.ico')));
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/jquery', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
 app.use(session({
