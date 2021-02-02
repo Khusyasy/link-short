@@ -2,7 +2,8 @@ extends layout
 
 block content
   h1 Redirecting to...
-  a(href=link)= link
+  pre= link
+  p Please wait for up to 5 seconds
   script.
     setTimeout(function () {
     window.location.href = "#{link}";
