@@ -1,8 +1,19 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+:root{
+    font-size: 15px;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
+}
+
+.container-fluid{
+    position: relative;
+    height: 100vh;
+}
+
+.row{
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
