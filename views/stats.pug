@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1.text-center Statistics of Link
+    .form-group
+        label(for="long") Long Link
+        input.form-control(type="text", value=long, id='long', readonly)
+    .form-group
+        label(for="short") Shorter Link
+        input.form-control(type="text", value=short, id='short', readonly)
+    .form-group
+        label(for="clicks") Number of Clicks
+        input.form-control(type="number", value=clicks, id='clicks', readonly)
+    .form-group
+        button.btn.btn-primary.form-control(onclick="$('#short').select(); document.execCommand('copy');") Copy Link
