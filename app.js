@@ -7,6 +7,7 @@ var session = require('express-session');
 var MemoryStore = require('memorystore')(session);
 require('dotenv').config();
 var favicon = require('serve-favicon');
+var flash = require('connect-flash');
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
@@ -34,6 +35,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+app.use(flash());
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

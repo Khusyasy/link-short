@@ -3,7 +3,7 @@ var URLisValid = require('../helpers/url_validation');
 var createShortID = require('../helpers/short_hash');
 
 exports.index = function (req, res, next) {
-    res.render('index', { title: 'Link Shortener', msg: req.session.msg });
+    res.render('index', { title: 'Link Shortener', msg: req.flash("message")[0] });
 }
 
 exports.create_link = async function (req, res, next) {
@@ -14,11 +14,11 @@ exports.create_link = async function (req, res, next) {
             var query_res = await connection.query(`INSERT INTO links (ID, link_long, link_short, created, click) VALUES (null, '${escape(url)}', '${hash}', NOW(), 0)`);
             res.redirect("/created/" + hash);
         } catch (err) {
-            req.session.msg = { status: "error", text: "Connection Error" };
+            req.flash("message", { status: "error", text: "Connection Error" });
             res.redirect("/");
         }
     } else {
-        req.session.msg = { status: "error", text: "URL is invalid" };
+        req.flash("message", { status: "error", text: "URL is invalid" });
         res.redirect("/");
     }
 }
@@ -34,7 +34,7 @@ exports.get_link = async function (req, res, next) {
             res.sendStatus(404);
         }
     } catch (err) {
-        req.session.msg = { status: "error", text: "Connection Error" };
+        req.flash("message", { status: "error", text: "Connection Error" });
         res.redirect("/");
     }
 }
@@ -50,7 +50,7 @@ exports.created = async function (req, res, next) {
             res.sendStatus(404);
         }
     } catch (err) {
-        req.session.msg = { status: "error", text: "Connection Error" };
+        req.flash("message", { status: "error", text: "Connection Error" });
         res.redirect("/");
     }
 }
@@ -66,7 +66,7 @@ exports.view_link = async function (req, res, next) {
             res.sendStatus(404);
         }
     } catch (err) {
-        req.session.msg = { status: "error", text: "Connection Error" };
+        req.flash("message", { status: "error", text: "Connection Error" });
         res.redirect("/");
     }
 }

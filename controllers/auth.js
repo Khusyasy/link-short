@@ -2,7 +2,7 @@ var connection = require('../helpers/database');
 var bcrypt = require('bcrypt');
 
 exports.login = function (req, res, next) {
-    res.render('login', { title: 'Login', msg: req.session.msg });
+    res.render('login', { title: 'Login', msg: req.flash("message")[0] });
 }
 
 exports.post_login = async function (req, res, next) {
@@ -19,25 +19,25 @@ exports.post_login = async function (req, res, next) {
                     res.redirect(req.session.referLogin || "/");
                     req.session.referLogin = null;
                 } else {
-                    req.session.msg = { status: "error", text: "Username or password not found" };
+                    req.flash("message", { status: "error", text: "Username or password not found" });
                     res.redirect("login");
                 }
             } else {
-                req.session.msg = { status: "error", text: "Username or password not found" };
+                req.flash("message", { status: "error", text: "Username or password not found" });
                 res.redirect("login");
             }
         } catch (err) {
-            req.session.msg = { status: "error", text: "Connection Error" };
+            req.flash("message", { status: "error", text: "Connection Error" });
             res.redirect("login");
         }
     } else {
-        req.session.msg = { status: "error", text: "Enter username and password" };
+        req.flash("message", { status: "error", text: "Enter username and password" });
         res.redirect("login");
     }
 }
 
 exports.register = function (req, res, next) {
-    res.render('register', { title: 'Register', msg: req.session.msg });
+    res.render('register', { title: 'Register', msg: req.flash("message")[0] });
 }
 
 exports.post_register = async function (req, res, next) {
@@ -46,10 +46,9 @@ exports.post_register = async function (req, res, next) {
     var password = req.body.password;
     var cpassword = req.body.cpassword;
     if (!username || !email || !password || !cpassword) {
-        req.session.msg = { status: "error", text: "Enter username, email and password" };
         res.redirect("register");
     } else if (password != cpassword) {
-        req.session.msg = { status: "error", text: "Password doesn't match" };
+        req.flash("message", { status: "error", text: "Password doesn't match" });
         res.redirect("register");
     }
     try {
@@ -67,7 +66,7 @@ exports.post_register = async function (req, res, next) {
                 msg = `The email address ${val} already have an account associated`;
             }
         }
-        req.session.msg = { status: "error", text: msg };
+        req.flash("message", { status: "error", text: msg });
         res.redirect("register");
     }
 }
