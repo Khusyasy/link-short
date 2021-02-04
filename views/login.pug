@@ -14,4 +14,6 @@ block content
     if msg
         if msg.status == "error"
             .alert.alert-danger(role="alert")= msg.text
+        else if msg.status == "success"
+            .alert.alert-success(role="alert")= msg.text
         
