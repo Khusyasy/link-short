@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1.text-center Register
+    form(action="register", method="post")
+        .form-group
+            label(for="username") Username
+            input.form-control(type="text", name="username", id="username", required)
+        .form-group
+            label(for="email") Email
+            input.form-control(type="email", name="email", id="email", required)
+        .form-group
+            label(for="password") Password
+            input.form-control(type="password", name="password", id="password", required)
+        .form-group
+            label(for="cpassword") Confirm Password
+            input.form-control(type="password", name="cpassword", id="cpassword", required)
+        .form-group
+            input.btn.btn-primary.form-control(type="submit", name="submit", value="Create Account")
+    if msg
+        if msg.status == "error"
+            .alert.alert-danger(role="alert")= msg.text
+        
