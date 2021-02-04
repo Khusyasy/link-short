@@ -27,7 +27,6 @@ exports.post_login = async function (req, res, next) {
                 res.redirect("login");
             }
         } catch (err) {
-            console.log(err);
             req.session.msg = { status: "error", text: "Connection Error" };
             res.redirect("login");
         }
@@ -41,8 +40,36 @@ exports.register = function (req, res, next) {
     res.render('register', { title: 'Register', msg: req.session.msg });
 }
 
-exports.post_register = function (req, res, next) {
-    //todo
+exports.post_register = async function (req, res, next) {
+    var username = req.body.username;
+    var email = req.body.email;
+    var password = req.body.password;
+    var cpassword = req.body.cpassword;
+    if (!username || !email || !password || !cpassword) {
+        req.session.msg = { status: "error", text: "Enter username, email and password" };
+        res.redirect("register");
+    } else if (password != cpassword) {
+        req.session.msg = { status: "error", text: "Password doesn't match" };
+        res.redirect("register");
+    }
+    try {
+        var pass_hash = await bcrypt.hash(password, 12);
+        var query_res = await connection.query(`INSERT INTO users (ID, username, email, password, verified, verify_hash, remember_hash) VALUES (null, '${escape(username)}', '${escape(email)}', '${pass_hash}', false, null, null)`);
+        res.redirect("login");
+    } catch (err) {
+        var msg = "Connection Error";
+        console.log(err);
+        if (err.errno == 1062) {
+            [val, field] = err.sqlMessage.match(/\'([^\']+)\'/g);
+            if (field == "'username'") {
+                msg = `The username ${val} is already taken`;
+            } else if (field == "'email'") {
+                msg = `The email address ${val} already have an account associated`;
+            }
+        }
+        req.session.msg = { status: "error", text: msg };
+        res.redirect("register");
+    }
 }
 
 exports.check_login = async function (req, res, next) {
