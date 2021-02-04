@@ -8,5 +8,6 @@ router.get('/', index.index);
 router.post('/', index.create_link);
 router.get('/created/:hash', index.created);
 router.get('/:hash', index.get_link);
+router.get('/stats/:hash', index.view_link);
 
 module.exports = router;

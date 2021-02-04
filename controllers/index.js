@@ -45,7 +45,21 @@ exports.created = function (req, res, next) {
             req.session.msg = { status: "error", text: "Connection Error" };
             res.redirect("/");
         } else if (results[0]) {
-            res.render('created', { title: "Created - " + unescape(results[0].link_long), long: unescape(results[0].link_long), short: process.env.BASE_URL + hash });
+            res.render('created', { title: "Created - " + unescape(results[0].link_long), long: unescape(results[0].link_long), short: process.env.BASE_URL + hash, stats: process.env.BASE_URL + "stats/" + hash });
+        } else {
+            res.sendStatus(404);
+        }
+    });
+}
+
+exports.view_link = function (req, res, next) {
+    var hash = req.params.hash;
+    connection.query(`SELECT * FROM links WHERE link_short = '${escape(hash)}'`, function (err, results, fields) {
+        if (err) {
+            req.session.msg = { status: "error", text: "Connection Error" };
+            res.redirect("/");
+        } else if (results[0]) {
+            res.render('stats', { title: "Created - " + unescape(results[0].link_long), long: unescape(results[0].link_long), short: process.env.BASE_URL + hash, click: results[0].click });
         } else {
             res.sendStatus(404);
         }
