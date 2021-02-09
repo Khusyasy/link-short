@@ -1,5 +1,6 @@
 var connection = require('../helpers/database');
 var bcrypt = require('bcrypt');
+var createShortID = require('../helpers/short_hash');
 
 exports.login = function (req, res, next) {
     res.render('login', { title: 'Login', msg: req.flash("message")[0] });
@@ -53,7 +54,8 @@ exports.post_register = async function (req, res, next) {
     }
     try {
         var pass_hash = await bcrypt.hash(password, 12);
-        var query_res = await connection.query(`INSERT INTO users (ID, username, email, password, verified, verify_hash, remember_hash) VALUES (null, '${escape(username)}', '${escape(email)}', '${pass_hash}', false, null, null)`);
+        var verify_hash = createShortID(username + email);
+        var query_res = await connection.query(`INSERT INTO users (ID, username, email, password, verified, verify_hash, remember_hash) VALUES (null, '${escape(username)}', '${escape(email)}', '${pass_hash}', false, '${verify_hash}', null)`);
         res.redirect("login");
     } catch (err) {
         var msg = "Connection Error";
@@ -78,5 +80,22 @@ exports.check_login = async function (req, res, next) {
     } else {
         req.session.referLogin = req.url;
         res.redirect("/auth/login");
+    }
+}
+
+exports.verify = async function (req, res, next) {
+    var hash = req.params.hash;
+    var email = req.params.email;
+    console.log(hash, email);
+    try {
+        var query_res = await connection.query(`SELECT * FROM users WHERE email = '${escape(email)}' AND verify_hash = '${escape(hash)}'`);
+        if (query_res[0].length != 1) throw "Email and ihash not found";
+        var query_res = await connection.query(`UPDATE users SET verify_hash = null, verified = true WHERE email = '${escape(email)}'`);
+        req.flash("message", { status: "success", text: "Verification done, please login to your account" });
+        res.redirect("/auth/register");
+    } catch (err) {
+        console.log(err);
+        req.flash("message", { status: "error", text: "Invalid verification link" });
+        res.redirect("/");
     }
 }

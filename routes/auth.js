@@ -9,4 +9,6 @@ router.post('/login', auth.post_login);
 router.get('/register', auth.register);
 router.post('/register', auth.post_register);
 
+router.get('/verify/:hash/:email', auth.verify);
+
 module.exports = router;
