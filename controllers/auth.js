@@ -1,6 +1,7 @@
 var connection = require('../helpers/database');
 var bcrypt = require('bcrypt');
 var createShortID = require('../helpers/short_hash');
+var mail = require("../helpers/mail");
 
 exports.login = function (req, res, next) {
     res.render('login', { title: 'Login', msg: req.flash("message")[0] });
@@ -56,6 +57,8 @@ exports.post_register = async function (req, res, next) {
         var pass_hash = await bcrypt.hash(password, 12);
         var verify_hash = createShortID(username + email);
         var query_res = await connection.query(`INSERT INTO users (ID, username, email, password, verified, verify_hash, remember_hash) VALUES (null, '${escape(username)}', '${escape(email)}', '${pass_hash}', false, '${verify_hash}', null)`);
+        var sendEmail = mail.send_verification(escape(email), verify_hash);
+        req.flash("message", { status: "success", text: "Check your email for a verification link" });
         res.redirect("login");
     } catch (err) {
         var msg = "Connection Error";
